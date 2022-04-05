@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jflutter/mainpages/homescreen.dart';
+import 'package:jflutter/mainpages/likescreen.dart';
+import 'package:jflutter/mainpages/settingscreen.dart';
 
 class MainPage extends StatefulWidget {
 
@@ -17,9 +20,9 @@ class _MainPageState extends State<MainPage> {
   ];
 
   List pages = [
-    Container(child: Center(child: Text('메인페이지'),),),
-    Container(child: Center(child: Text('좋아요한기사'),),),
-    Container(child: Center(child: Text('설정'),),),
+    HomeScreen(),
+    LikeScreen(),
+    SettingScreen(),
   ];
 
   @override
