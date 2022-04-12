@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jflutter/cards/postcard.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -10,7 +11,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text('홈'),);
+    return Container(child: ListView.builder(
+      itemCount: 30, itemBuilder: (BuildContext context, int index){
+          return PostCard(
+            number : index
+          );
+        }),);
   }
 
 }
