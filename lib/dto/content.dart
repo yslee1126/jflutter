@@ -1,16 +1,17 @@
 class Content {
-  int? contentId;
-  String? contentType;
-  String? title;
-  String? thumbnail;
+  final int contentId;
+  final String contentType;
+  final String title;
+  final String thumbnail;
 
-  Content({this.contentId, this.contentType, this.title, this.thumbnail});
+  Content({required this.contentId,  required this.contentType,  required this.title,  required this.thumbnail});
 
-  Content.fromJson(Map<String, dynamic> json) {
-    contentId = json['contentId'];
-    contentType = json['contentType'];
-    title = json['title'];
-    thumbnail = json['thumbnail'];
+  factory Content.fromJson(Map<String, dynamic> json) {
+    return Content(
+        contentId: json['contentId'],
+        contentType:  json['contentType'],
+        title: json['title'],
+        thumbnail: json['thumbnail']);
   }
 
   Map<String, dynamic> toJson() {
