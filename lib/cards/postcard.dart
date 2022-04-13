@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class PostCard extends StatefulWidget {
 
-  int number;
+  int contentId;
 
-  PostCard({required this.number});
+  PostCard({required this.contentId});
 
   @override
   _PostCardState createState() => _PostCardState();
