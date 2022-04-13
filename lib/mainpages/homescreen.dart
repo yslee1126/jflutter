@@ -11,24 +11,47 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Content>> contents;
+  ScrollController _scrollController = ScrollController();
+  int lastContentId = 0;
 
   @override
   initState() {
     super.initState();
     contents = fetchContents();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        setState(() {
+          print('bottom' + lastContentId.toString());
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<List<Content>> fetchContents() async {
-    final response = await http.get(Uri.parse(
-        'https://api-hey.news.co.kr/opi/home_content?page_size=12&last_row_id=2022040800852643'));
+    String url = 'https://api-hey.news.co.kr/opi/home_content?page_size=12';
+    if (lastContentId > 0) {
+      url = url + '&last_row_id=' + lastContentId.toString();
+    }
+    final response = await http.get(Uri.parse(url));
 
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List)
+      List<Content> result = (jsonDecode(response.body) as List)
           .map((e) => Content.fromJson(e))
           .toList();
+      if (result.last.contentId > 0) {
+        lastContentId = result.last.contentId;
+      }
+      return result;
     } else {
       throw Exception('Failed to load');
     }
@@ -44,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             List<Content>? data = snapshot.data;
             return ListView.builder(
                 itemCount: data!.length,
+                controller: _scrollController,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     child: Column(
