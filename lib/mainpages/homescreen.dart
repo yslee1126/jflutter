@@ -10,19 +10,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Content>> contents;
+  late Future<List<Content>> futureContents;
+  List<Content> contents = [];
   ScrollController _scrollController = ScrollController();
   int lastContentId = 0;
 
   @override
   initState() {
     super.initState();
-    contents = fetchContents();
+    futureContents = fetchContents();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        setState(() {
-          print('bottom' + lastContentId.toString());
+        print('bottom' + lastContentId.toString());
+        fetchContents().then((value) => {
+          setState(() => {})
         });
       }
     });
@@ -35,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Content>> fetchContents() async {
+    // contents.clear();
     String url = 'https://api-hey.news.co.kr/opi/home_content?page_size=12';
     if (lastContentId > 0) {
       url = url + '&last_row_id=' + lastContentId.toString();
@@ -51,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
       if (result.last.contentId > 0) {
         lastContentId = result.last.contentId;
       }
-      return result;
+      contents.addAll(result);
+      return contents;
     } else {
       throw Exception('Failed to load');
     }
@@ -61,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: FutureBuilder<List<Content>>(
-        future: contents,
+        future: futureContents,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<Content>? data = snapshot.data;
